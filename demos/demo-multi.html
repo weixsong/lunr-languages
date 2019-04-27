@@ -6,6 +6,8 @@
     <script src="lib/lunr.js"></script>
     <script src="../lunr.stemmer.support.js"></script>
     <script src="../lunr.ru.js"></script>
+    <script src="../tinyseg.js"></script>
+    <script src="../lunr.jp.js"></script>
     <script src="../lunr.multi.js"></script>
 </head>
 <body>
@@ -16,32 +18,53 @@
             this.field('body')
         });
 
+        var idxJp = lunr(function () {
+            this.use(lunr.jp);
+            this.field('body')
+        });
+
         var idxRu = lunr(function () {
             this.use(lunr.ru);
             this.field('body')
         });
 
         var idxMulti = lunr(function () {
-            this.use(lunr.multiLanguage('en', 'ru'));
+            this.use(lunr.multiLanguage('en', 'jp', 'ru'));
             this.field('body')
         });
 
-        idxEn.add({"body": "Этот текст написан на русском.", "id": 1})
-        idxRu.add({"body": "Этот текст написан на русском.", "id": 1})
-        idxMulti.add({"body": "Этот текст написан на русском.", "id": 1})
+        var doc1 = {"body": "Этот текст написан на русском.", "id": 1} 
+        idxEn.add(doc1)
+        idxRu.add(doc1)
+        idxMulti.add(doc1)
 
-        idxEn.add({"body": "This text is written in the English language.", "id": 2})
-        idxRu.add({"body": "This text is written in the English language.", "id": 2})
-        idxMulti.add({"body": "This text is written in the English language.", "id": 2})
+        var doc2 = {"body": "This text is written in the English language.", "id": 2}
+        idxEn.add(doc2)
+        idxJp.add(doc2)
+        idxRu.add(doc2)
+        idxMulti.add(doc2)
 
-        console.log('Search for `Русских` (English pipeline): ', idxEn.search('Русских'));
+        var doc3 = {"body": "このテキストは日本語で書かれています。", "id": 3}; 
+        idxEn.add(doc3)
+        idxJp.add(doc3)
+        idxRu.add(doc3)
+        idxMulti.add(doc3)
+
+        console.log('Search for `Этот текст` (English pipeline): ', idxEn.search('Этот текст'));
+        console.log('Search for `日本語` (English pipeline): ', idxEn.search('日本語'));
         console.log('Search for `languages` (English pipeline): ', idxEn.search('languages'));
 
-        console.log('Search for `Русских` (Russian pipeline): ', idxRu.search('Русских'));
+        console.log('Search for `Этот текст` (Russian pipeline): ', idxRu.search('Этот текст'));
+        console.log('Search for `日本語` (Russian pipeline): ', idxRu.search('日本語'));
         console.log('Search for `languages` (Russian pipeline): ', idxRu.search('languages'));
 
-        console.log('Search for `Русских` (Ru + En pipeline): ', idxMulti.search('Русских'));
-        console.log('Search for `languages` (Ru + En pipeline): ', idxMulti.search('languages'));
+        console.log('Search for `Этот текст` (Japanese pipeline): ', idxJp.search('Этот текст'));
+        console.log('Search for `日本語` (Japanese pipeline): ', idxJp.search('日本語'));
+        console.log('Search for `languages` (Japanese pipeline): ', idxJp.search('languages'));
+
+        console.log('Search for `Этот текст` (Ru + Jp + En pipeline): ', idxMulti.search('Этот текст'));
+        console.log('Search for `日本語` (Ru + Jp + En pipeline): ', idxMulti.search('日本語'));
+        console.log('Search for `languages` (Ru + Jp + En pipeline): ', idxMulti.search('languages'));
 
     </script>
 </body>

@@ -108,6 +108,10 @@
     lunr.jp.stopWordFilter.stopWords = new lunr.SortedSet();
     lunr.jp.stopWordFilter.stopWords.length = 45;
 
+    lunr.jp['wordCharacters'] = '一二三四五六七八九十百千万億兆一-龠々〆ヵヶぁ-んァ-ヴーｱ-ﾝﾞa-zA-Zａ-ｚＡ-Ｚ0-9０-９';
+    lunr.jp.trimmer = lunr.trimmerSupport.generateTrimmer(lunr.jp.wordCharacters);
+    lunr.Pipeline.registerFunction(lunr.jp.trimmer, 'trimmer-jp');
+
     // The space at the beginning is crucial: It marks the empty string
     // as a stop word. lunr.js crashes during search when documents
     // processed by the pipeline still contain the empty string.
